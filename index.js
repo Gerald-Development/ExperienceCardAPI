@@ -17,49 +17,49 @@ function setTextSize(ctx, text, maxwidth) {
 }
 
 async function createExperienceCard(req, res) {
-    const avatarURL = req.query.avatarURL;
+    const avatarURL = req.query.avatar_url;
     const xpAchieved = req.query.xp;
     const xpNeededToLevelUp = req.query.xp_needed;
     const level = req.query.level;
     const rank = req.query.rank;
     const username = req.query.username;
 
-    const bar_width = 600;
-    const bar_colour = config.bar_colour
+    const barWidth = 600;
+    const barColour = req.query.bar_colour;
 
     const canvas = createCanvas(1000, 300)
     const ctx = canvas.getContext('2d');
     const avatar = await loadImage(avatarURL);
-    const background = config.bg_colour;
+    const background = req.query.bg_colour;
 
     ctx.fillStyle = background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // XP Bar
+    //XP Bar properties
     ctx.lineJoin = "round";
     ctx.lineWidth = 69;
 
-    // Empty Bar
+    //Background Bar
     ctx.strokeStyle = "black";
-    ctx.strokeRect(340, 200, bar_width, 0);
+    ctx.strokeRect(340, 200, barWidth, 0);
 
-    // Filled Bar
-    ctx.strokeStyle = bar_colour
-    ctx.strokeRect(340, 200, bar_width * xpAchieved / xpNeededToLevelUp, 0);
+    //Progress Bar
+    ctx.strokeStyle = barColour
+    ctx.strokeRect(340, 200, barWidth * xpAchieved / xpNeededToLevelUp, 0);
 
-    // Adding Username
+    //Username
     setTextSize(ctx, username, 650);
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "left";
     ctx.fillText(username, 310, 100, 750);
 
-    // Adding titles
+    //Rank and Level
     ctx.fillStyle = "#737373";
     ctx.font = "bold 20px Sans";
     ctx.textAlign = "right";
     ctx.fillText("Rank #" + rank + "\nLevel " + level, 950, 125);
 
-    // Adding bar title
+    //XP and percentage
     ctx.fillStyle = "#737373";
     ctx.font = "bold 15px Sans";
     ctx.textAlign = "left";
@@ -67,16 +67,16 @@ async function createExperienceCard(req, res) {
     const experiencePercentage = `${((xpAchieved * 100) / xpNeededToLevelUp).toFixed(0)}%`;
     ctx.fillText(experienceFraction + " (" + experiencePercentage + ")", 310, 150);
 
-    // Remove the corners
+    //Round the avatar corners
     ctx.beginPath();
     ctx.arc(150, 150, 144, 0, 2 * Math.PI);
     ctx.closePath();
     ctx.clip();
 
-    // Add the avatar
+    //Avatar
     ctx.drawImage(avatar, 10, 10, 290, 290);
 
-    // Middle circle for Avatar Background
+    //Avatar outline
     ctx.beginPath();
     ctx.arc(150, 150, 145, 0, 2 * Math.PI);
     ctx.lineWidth = 10;
@@ -84,6 +84,7 @@ async function createExperienceCard(req, res) {
     ctx.stroke();
     ctx.closePath();
 
+    //Send Base64 back
     res.send(canvas.toDataURL());
 }
 
