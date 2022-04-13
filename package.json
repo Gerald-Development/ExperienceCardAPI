@@ -1,0 +1,23 @@
+{
+  "name": "experiencecardapi",
+  "version": "1.0.0",
+  "description": "An HTTP api to generate discord XP cards",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gerald-Development/ExperienceCardAPI.git"
+  },
+  "author": "Gerald-Development Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gerald-Development/ExperienceCardAPI/issues"
+  },
+  "homepage": "https://github.com/Gerald-Development/ExperienceCardAPI#readme",
+  "dependencies": {
+    "canvas": "^2.9.1",
+    "express": "^4.17.3"
+  }
+}
