@@ -5,7 +5,7 @@ const config = require("./config.json");
 const app = express();
 
 function setTextSize(ctx, text, maxwidth) {
-    let size = 40;
+    let size = 50;
     ctx.font = `bold ${size}px Sans`;
     while (ctx.measureText(text).width > maxwidth) {
         size--;
@@ -42,7 +42,7 @@ async function createExperienceCard(req, res) {
     ctx.lineWidth = 69;
 
     //Background Bar
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "#000000";
     ctx.strokeRect(340, 200, barWidth, 0);
 
     //Progress Bar
@@ -51,19 +51,19 @@ async function createExperienceCard(req, res) {
 
     //Username
     setTextSize(ctx, username, 650);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "left";
     ctx.fillText(username, 310, 100, 750);
 
     //Rank and Level
-    ctx.fillStyle = "#737373";
-    ctx.font = "bold 20px Sans";
-    ctx.textAlign = "right";
-    ctx.fillText("Rank #" + rank + "\nLevel " + level, 950, 125);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 35px Sans";
+    ctx.textAlign = "left";
+    ctx.fillText("Rank #" + rank + " | Level " + level, 310, 280);
 
     //XP and percentage
     ctx.fillStyle = "#737373";
-    ctx.font = "bold 20px Sans";
+    ctx.font = "bold 35px Sans";
     ctx.textAlign = "left";
     const experienceFraction = `${xpAchieved} / ${xpNeededToLevelUp} XP`;
     const experiencePercentage = `${((xpAchieved * 100) / xpNeededToLevelUp).toFixed(0)}%`;
@@ -82,7 +82,7 @@ async function createExperienceCard(req, res) {
     ctx.beginPath();
     ctx.arc(150, 150, 145, 0, 2 * Math.PI);
     ctx.lineWidth = 10;
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "#FFFFFF";
     ctx.stroke();
     ctx.closePath();
 
