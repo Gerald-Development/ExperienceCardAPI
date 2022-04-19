@@ -23,14 +23,14 @@ async function createExperienceCard(req, res) {
     const level = req.query.level;
     const rank = req.query.rank;
     const username = req.query.username;
+    const background = req.query.bg_colour;
+    const barColour = req.query.bar_colour;
 
     const barWidth = 600;
-    const barColour = req.query.bar_colour;
 
     const canvas = createCanvas(1000, 300)
     const ctx = canvas.getContext('2d');
     const avatar = await loadImage(avatarURL);
-    const background = req.query.bg_colour;
 
     console.log("Making card for " + username);
 
