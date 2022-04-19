@@ -11,8 +11,6 @@ function setTextSize(ctx, text, maxwidth) {
         size--;
         if (size < 8) break;
         ctx.font = `bold ${size}px Sans`;
-        console.log(ctx.measureText(text).width);
-        console.log(size);
     }
 }
 
