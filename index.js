@@ -14,6 +14,21 @@ function setTextSize(ctx, text, maxwidth) {
     }
 }
 
+function roundedClipBox(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.clip();
+}
+
 async function createExperienceCard(req, res) {
     const avatarURL = req.query.avatar_url;
     const xpAchieved = req.query.xp;
@@ -24,28 +39,31 @@ async function createExperienceCard(req, res) {
     const background = req.query.bg_colour;
     const barColour = req.query.bar_colour;
 
-    const barWidth = 600;
-
+    const barWidth = 650;
     const canvas = createCanvas(1000, 300)
     const ctx = canvas.getContext('2d');
     const avatar = await loadImage(avatarURL);
 
     console.log("Making card for " + username);
 
+    //Round edges of card
+    roundedClipBox(ctx, 0, 0, canvas.width, canvas.height, 20);
+
+    //Fill in background
     ctx.fillStyle = background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     //XP Bar properties
     ctx.lineJoin = "round";
-    ctx.lineWidth = 69;
+    ctx.lineWidth = 10;
 
     //Background Bar
     ctx.strokeStyle = "#000000";
-    ctx.strokeRect(340, 200, barWidth, 0);
+    ctx.strokeRect(315, 195, barWidth, 0);
 
     //Progress Bar
     ctx.strokeStyle = barColour
-    ctx.strokeRect(340, 200, barWidth * xpAchieved / xpNeededToLevelUp, 0);
+    ctx.strokeRect(315, 195, barWidth * xpAchieved / xpNeededToLevelUp, 0);
 
     //Username
     setTextSize(ctx, username, 650);
@@ -57,7 +75,7 @@ async function createExperienceCard(req, res) {
     ctx.fillStyle = "#FFFFFF";
     ctx.font = "bold 35px Sans";
     ctx.textAlign = "left";
-    ctx.fillText("Rank #" + rank + " | Level " + level, 310, 280);
+    ctx.fillText("Rank #" + rank + " | Level " + level, 310, 260);
 
     //XP and percentage
     ctx.fillStyle = "#737373";
@@ -65,30 +83,19 @@ async function createExperienceCard(req, res) {
     ctx.textAlign = "left";
     const experienceFraction = `${xpAchieved} / ${xpNeededToLevelUp} XP`;
     const experiencePercentage = `${((xpAchieved * 100) / xpNeededToLevelUp).toFixed(0)}%`;
-    ctx.fillText(experienceFraction + " (" + experiencePercentage + ")", 310, 150);
+    ctx.fillText(experienceFraction + " (" + experiencePercentage + ")", 310, 155);
 
     //Round the avatar corners
-    ctx.beginPath();
-    ctx.arc(150, 150, 144, 0, 2 * Math.PI);
-    ctx.closePath();
-    ctx.clip();
+    roundedClipBox(ctx, 38, 38, 224, 224, 20);
 
-    //Avatar
-    ctx.drawImage(avatar, 10, 10, 290, 290);
-
-    //Avatar outline
-    ctx.beginPath();
-    ctx.arc(150, 150, 145, 0, 2 * Math.PI);
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = "#FFFFFF";
-    ctx.stroke();
-    ctx.closePath();
+    //Add avatar
+    ctx.drawImage(avatar, 38, 38, 224, 224);
 
     //Send Base64 back
-    res.send(canvas.toDataURL());
+    res.send(canvas.toDataURL('image/png'));
     console.log("Made card for " + username);
 }
 
-app.get('/api', (req, res) => createExperienceCard(req, res));
+app.get('/api/xpcard', (req, res) => createExperienceCard(req, res));
 app.listen(config.port);
 console.log("Listening on port " + config.port);
