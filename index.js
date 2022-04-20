@@ -7,11 +7,11 @@ const app = express();
 function setTextSize(ctx, text, maxwidth) {
     let size = 50;
     ctx.font = `bold ${size}px Sans`;
-    while (ctx.measureText(text).width > maxwidth) {
+    while (ctx.measureText(text).width > maxwidth && size > 8) {
         size--;
-        if (size < 8) break;
         ctx.font = `bold ${size}px Sans`;
     }
+    return ctx.measureText(text).width;
 }
 
 function roundedClipBox(ctx, x, y, width, height, radius) {
@@ -36,8 +36,10 @@ async function createExperienceCard(req, res) {
     const level = req.query.level;
     const rank = req.query.rank;
     const username = req.query.username;
+    const discriminator = req.query.discriminator;
     const background = req.query.bg_colour;
-    const barColour = req.query.bar_colour;
+    const barFromColour = req.query.bar_colour_from;
+    const barToColour = req.query.bar_colour_to;
 
     const barWidth = 650;
     const canvas = createCanvas(1000, 300)
@@ -55,24 +57,32 @@ async function createExperienceCard(req, res) {
 
     //XP Bar properties
     ctx.lineJoin = "round";
-    ctx.lineWidth = 10;
+    ctx.lineWidth = 15;
 
     //Background Bar
     ctx.strokeStyle = "#000000";
     ctx.strokeRect(315, 195, barWidth, 0);
 
     //Progress Bar
-    ctx.strokeStyle = barColour
+    const gradient = ctx.createLinearGradient(315, 195, barWidth * xpAchieved / xpNeededToLevelUp, 0);
+    gradient.addColorStop(0, barFromColour);
+    gradient.addColorStop(1, barToColour);
+
+    ctx.strokeStyle = gradient;
     ctx.strokeRect(315, 195, barWidth * xpAchieved / xpNeededToLevelUp, 0);
 
     //Username
-    setTextSize(ctx, username, 650);
+    const usernameWidth = setTextSize(ctx, username, 570);
     ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "left";
-    ctx.fillText(username, 310, 100, 750);
+    ctx.fillText(username, 310, 100, 570);
+
+    ctx.fillStyle = "#737373";
+    ctx.font = "bold 35px Sans";
+    ctx.fillText(discriminator, 310 + usernameWidth, 100);
 
     //Rank and Level
-    ctx.fillStyle = "#FFFFFF";
+    ctx.fillStyle = "#737373";
     ctx.font = "bold 35px Sans";
     ctx.textAlign = "left";
     ctx.fillText("Rank #" + rank + " | Level " + level, 310, 260);
@@ -83,7 +93,7 @@ async function createExperienceCard(req, res) {
     ctx.textAlign = "left";
     const experienceFraction = `${xpAchieved} / ${xpNeededToLevelUp} XP`;
     const experiencePercentage = `${((xpAchieved * 100) / xpNeededToLevelUp).toFixed(0)}%`;
-    ctx.fillText(experienceFraction + " (" + experiencePercentage + ")", 310, 155);
+    ctx.fillText(experienceFraction + " • " + experiencePercentage, 310, 155);
 
     //Round the avatar corners
     roundedClipBox(ctx, 38, 38, 224, 224, 20);
