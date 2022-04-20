@@ -64,7 +64,7 @@ async function createExperienceCard(req, res) {
     ctx.strokeRect(315, 195, barWidth, 0);
 
     //Progress Bar
-    const gradient = ctx.createLinearGradient(315, 195, barWidth * xpAchieved / xpNeededToLevelUp, 0);
+    const gradient = ctx.createLinearGradient(315, 195, 315 + barWidth, 195);
     gradient.addColorStop(0, barFromColour);
     gradient.addColorStop(1, barToColour);
 
@@ -72,14 +72,14 @@ async function createExperienceCard(req, res) {
     ctx.strokeRect(315, 195, barWidth * xpAchieved / xpNeededToLevelUp, 0);
 
     //Username
-    const usernameWidth = setTextSize(ctx, username, 570);
+    const usernameWidth = setTextSize(ctx, username, 560);
     ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "left";
-    ctx.fillText(username, 310, 100, 570);
+    ctx.fillText(username, 310, 100, 560);
 
     ctx.fillStyle = "#737373";
     ctx.font = "bold 35px Sans";
-    ctx.fillText(discriminator, 310 + usernameWidth, 100);
+    ctx.fillText(discriminator, 320 + usernameWidth, 100);
 
     //Rank and Level
     ctx.fillStyle = "#FFFFFF";
@@ -102,7 +102,7 @@ async function createExperienceCard(req, res) {
     ctx.drawImage(avatar, 38, 38, 224, 224);
 
     //Send Base64 back
-    res.send(canvas.toDataURL('image/png'));
+    res.send(canvas.toDataURL('image/png', 1));
     console.log("Made card for " + username);
 }
 
