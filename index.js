@@ -36,7 +36,7 @@ async function createExperienceCard(req, res) {
     const level = req.query.level;
     const rank = req.query.rank;
     const username = req.query.username;
-    const discriminator = req.query.discriminator;
+    const discriminator = "#" + req.query.discriminator;
     const background = req.query.bg_colour;
     const barFromColour = req.query.bar_colour_from;
     const barToColour = req.query.bar_colour_to;
@@ -60,7 +60,7 @@ async function createExperienceCard(req, res) {
     ctx.lineWidth = 15;
 
     //Background Bar
-    ctx.strokeStyle = "#000000";
+    ctx.strokeStyle = "#242424";
     ctx.strokeRect(315, 195, barWidth, 0);
 
     //Progress Bar
@@ -82,7 +82,7 @@ async function createExperienceCard(req, res) {
     ctx.fillText(discriminator, 310 + usernameWidth, 100);
 
     //Rank and Level
-    ctx.fillStyle = "#737373";
+    ctx.fillStyle = "#FFFFFF";
     ctx.font = "bold 35px Sans";
     ctx.textAlign = "left";
     ctx.fillText("Rank #" + rank + " | Level " + level, 310, 260);
