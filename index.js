@@ -6,10 +6,10 @@ const app = express();
 
 function setTextSize(ctx, text, maxwidth) {
     let size = 50;
-    ctx.font = `bold ${size}px Sans`;
+    ctx.font = `${size}px Whitney Bold`;
     while (ctx.measureText(text).width > maxwidth && size > 8) {
         size--;
-        ctx.font = `bold ${size}px Sans`;
+        ctx.font = `${size}px Bold`;
     }
 }
 
@@ -79,13 +79,13 @@ async function createExperienceCard(req, res) {
 
     //Rank and Level
     ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 35px Sans";
+    ctx.font = "35px Whitney Bold";
     ctx.textAlign = "left";
     ctx.fillText("Rank #" + rank + " • Level " + level, 295, 240);
 
     //XP and percentage
     ctx.fillStyle = "#737373";
-    ctx.font = "bold 35px Sans";
+    ctx.font = "35px Whitney Bold";
     ctx.textAlign = "left";
     const experienceFraction = `${xpAchieved} / ${xpNeededToLevelUp} XP`;
     const experiencePercentage = `${((xpAchieved * 100) / xpNeededToLevelUp).toFixed(0)}%`;
