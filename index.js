@@ -11,7 +11,6 @@ function setTextSize(ctx, text, maxwidth) {
         size--;
         ctx.font = `bold ${size}px Sans`;
     }
-    return ctx.measureText(text).width;
 }
 
 function roundedClipBox(ctx, x, y, width, height, radius) {
@@ -36,7 +35,6 @@ async function createExperienceCard(req, res) {
     const level = req.query.level;
     const rank = req.query.rank;
     const username = req.query.username;
-    const discriminator = "#" + req.query.discriminator;
     const background = req.query.bg_colour;
     const barFromColour = req.query.bar_colour_from;
     const barToColour = req.query.bar_colour_to;
@@ -74,14 +72,10 @@ async function createExperienceCard(req, res) {
     ctx.strokeRect(barX, barY, barWidth * xpAchieved / xpNeededToLevelUp, 0);
 
     //Username
-    const usernameWidth = setTextSize(ctx, username, 570);
+    setTextSize(ctx, username, 680);
     ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "left";
-    ctx.fillText(username, 295, 100, 570);
-
-    ctx.fillStyle = "#737373";
-    ctx.font = "bold 35px Sans";
-    ctx.fillText(discriminator, 300 + usernameWidth, 100);
+    ctx.fillText(username, 295, 100, 680);
 
     //Rank and Level
     ctx.fillStyle = "#FFFFFF";
